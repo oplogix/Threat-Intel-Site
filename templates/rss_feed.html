@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMB Threat Intel - RSS Feed</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Threat Intelligence Feed from nao_sec</h1>
+        <div class="mt-4">
+            {% for entry in entries %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ entry.link }}" target="_blank">{{ entry.title }}</a>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ entry.published }}</h6>
+                        <p class="card-text">{{ entry.summary | safe }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Back to Home</a>
+    </div>
+</body>
+</html>

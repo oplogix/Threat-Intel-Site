@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Threat Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/report.css') }}">
+</head>
+<body>
+
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mt-4">🔙 Back</a>
+    
+    <div class="summary">
+        <h2>Summary</h2>
+        <p><strong>Total Threats:</strong> {{ total_threats }}</p>
+        <!-- Technology Filters -->
+        <p><strong>Technologies:</strong></p>
+        <div id="tech-filters" class="mb-2">
+            {% for tech in techs %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input tech-checkbox" type="checkbox" id="tech-{{ tech }}" value="{{ tech }}" checked>
+                    <label class="form-check-label" for="tech-{{ tech }}">{{ tech }}</label>
+                </div>
+            {% endfor %}
+        </div>
+        <!-- Filter Info and Controls -->
+        <p>
+            <strong>By Severity:</strong><br>
+            <span class="badge bg-secondary" id="all-severity" style="cursor: pointer;">All: {{ total_threats }}</span> |
+            <span class="badge bg-success" id="low-severity" style="cursor: pointer;">Low: {{ severity_counts.low }}</span> |
+            <span class="badge bg-warning" id="medium-severity" style="cursor: pointer;">Medium: {{ severity_counts.medium }}</span> |
+            <span class="badge bg-danger" id="high-severity" style="cursor: pointer;">High: {{ severity_counts.high }}</span>
+        </p>
+        <!-- Filter Status -->
+        <p id="filter-status" class="text-muted fst-italic">Showing: All Threats</p>
+        <canvas id="severityChart" width="400" height="100"></canvas>
+
+        <div class="mt-4">
+            <button id="toggle-all" class="btn btn-sm btn-outline-primary">Expand All</button>
+        </div>
+        
+    </div>
+
+    {% for tech, threats in threats.items() %}
+    <div class="mt-5 tech-section" data-tech="{{ tech }}">
+        <h3 class="tech-header" style="cursor: pointer;">
+            ▶ {{ tech }} Threats
+        </h3>
+        <div class="tech-content">
+            {% if threats %}
+            <ul class="list-group" id="threat-list-{{ tech }}">
+                {% for threat in threats %}
+                    <li class="list-group-item threat-item" data-severity="{{ threat.severity }}" data-category="{{ threat.category }}">
+                        <a href="https://attack.mitre.org/techniques/{{ threat.id.replace('.', '/') }}/" target="_blank">
+
+                            <strong>{{ threat.name }}</strong> ({{ threat.id }})
+                        </a><br>
+                        <small><strong>Platforms:</strong> {{ threat.platforms | join(", ") }}</small><br>
+                        <small>{{ threat.description[:300] }}...</small>
+            
+                        {% if threat.description|length > 300 %}
+                        <div class="more-details mt-2" style="display: none;">
+                            <hr>
+                            <small>{{ threat.description }}</small>
+                        </div>
+                        <button class="btn btn-sm btn-link toggle-details">🔽 More</button>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            
+            {% else %}
+                <p>No mapped threats found.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    
+    
+   
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/report.js') }}"></script>
+
+</body>
+</html>

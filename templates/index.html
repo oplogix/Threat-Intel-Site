@@ -1,0 +1,115 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMB Threat Intelligence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Select Technologies You Use</h1>
+        <form action="{{ url_for('report') }}" method="post">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="technologies" value="PRE" id="pre">
+                <label class="form-check-label" for="pre">PRE</label>
+            </div>
+            
+            <!-- Windows -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="technologies" value="Windows" id="windows">
+                <label class="form-check-label" for="windows">Windows</label>
+            </div>
+    
+            <!-- macOS -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="technologies" value="macOS" id="macos">
+                <label class="form-check-label" for="macos">macOS</label>
+            </div>
+    
+            <!-- Linux -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="technologies" value="Linux" id="linux">
+                <label class="form-check-label" for="linux">Linux</label>
+            </div>
+    
+            <!-- Cloud (with nested options) -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="cloud" onclick="toggleCloudTechnologies()">
+                <label class="form-check-label" for="cloud">Cloud</label>
+            </div>
+            <div id="cloud-technologies" style="display:none; padding-left: 20px;">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="technologies" value="Office Suite" id="office-suite">
+                    <label class="form-check-label" for="office-suite">Office Suite</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="technologies" value="Identity Provider" id="identity-provider">
+                    <label class="form-check-label" for="identity-provider">Identity Provider</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="technologies" value="SaaS" id="saas">
+                    <label class="form-check-label" for="saas">SaaS</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="technologies" value="IaaS" id="iaas">
+                    <label class="form-check-label" for="iaas">IaaS</label>
+                </div>
+            </div>
+    
+            <!-- Network -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="technologies" value="Network" id="network">
+                <label class="form-check-label" for="network">Network</label>
+            </div>
+    
+            <!-- Containers -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="technologies" value="Containers" id="containers">
+                <label class="form-check-label" for="containers">Containers</label>
+            </div>
+    
+            <button type="submit" class="btn btn-primary mt-3">View Threats</button>
+        </form>
+    
+    
+        <script>
+            function toggleCloudTechnologies() {
+                const cloudTechs = document.getElementById('cloud-technologies');
+                const cloudArrow = document.getElementById('cloud-arrow');
+        
+                if (cloudTechs.style.display === 'none') {
+                    cloudTechs.style.display = 'block';
+                    cloudArrow.classList.remove('caret');
+                    cloudArrow.classList.add('caret-down');
+                } else {
+                    cloudTechs.style.display = 'none';
+                    cloudArrow.classList.remove('caret-down');
+                    cloudArrow.classList.add('caret');
+                }
+            }
+        </script>
+
+        <!-- Add some simple CSS for the caret -->
+        <style>
+            .caret {
+                display: inline-block;
+                border-left: 4px solid transparent;
+                border-right: 4px solid transparent;
+                border-top: 6px solid #000;
+                margin-right: 5px;
+            }
+
+            .caret-down {
+                border-top: none;
+                border-bottom: 6px solid #000;
+            }
+        </style>
+
+
+    <hr class="my-4">
+
+    <a href="{{ url_for('rss_feed') }}">📡 View Live Threat Feed (bonus)</a>
+</div>
+</body>
+</html>
