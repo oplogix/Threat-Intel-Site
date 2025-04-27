@@ -1,6 +1,8 @@
 import feedparser
 from flask import Flask, render_template, request
 from mitre_data import get_threats_for_tech
+import requests
+import os
 
 app = Flask(__name__)
 
