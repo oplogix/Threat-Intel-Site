@@ -5,6 +5,8 @@ from mitre_data import get_threats_for_tech
 app = Flask(__name__)
 
 RSS_FEED_URL = "http://nao-sec.org/feed.xml"
+MITRE_ENTERPRISE_JSON_URL = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"
+LOCAL_JSON_PATH = "data/mitre/enterprise/enterprise-attack.json"
 
 def parse_rss():
     feed = feedparser.parse(RSS_FEED_URL)
@@ -38,8 +40,23 @@ def report():
     return render_template('report.html', techs=selected_techs, threats=all_threats,
                            severity_counts=severity_counts, total_threats=total_threats)
 
+def download_mitre_data():
+    response = requests.get(MITRE_ENTERPRISE_JSON_URL)
+    if response.status_code == 200:
+        os.makedirs(os.path.dirname(LOCAL_JSON_PATH), exist_ok=True)
+        with open(LOCAL_JSON_PATH, 'w', encoding='utf-8') as f:
+            f.write(response.text)
+        print("MITRE data updated successfully!")
+    else:
+        print(f"Failed to fetch MITRE data: {response.status_code}")
 
+
+@app.route('/update-threat-data')
+def update_threat_data():
+    download_mitre_data()
+    return render_template('update_success.html')
 
 
 if __name__ == '__main__':
+    download_mitre_data()
     app.run(debug=True)
